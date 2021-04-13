@@ -912,6 +912,18 @@ This variable is a normal hook.  See Info node `(elisp)Hooks'."
   :risky t
   :package-version '(flycheck . "0.21"))
 
+(defcustom flycheck-error-list-after-jump-hook nil
+  "Functions to run after jumping to the error from the error list.
+
+This hook is run after moving to the error.  A possible idea
+is to adjust the frame to bring the full context into view.
+
+This variable is a normal hook.  See Info node `(elisp)Hooks'."
+  :group 'flycheck
+  :type 'hook
+  :risky t
+  :package-version '(flycheck . "0.33"))
+
 (defface flycheck-error-delimiter
   `((t))
   "Flycheck face for errors spanning multiple lines.
@@ -5271,7 +5283,8 @@ Interactively, or with non-nil REFRESH, refresh the error list."
 POS defaults to `point'."
   (interactive)
   (when-let* ((error (tabulated-list-get-id pos)))
-    (flycheck-jump-to-error error)))
+    (flycheck-jump-to-error error)
+    (run-hooks 'flycheck-error-list-after-jump-hook)))
 
 (defun flycheck-jump-to-error (error)
   "Go to the location of ERROR."
